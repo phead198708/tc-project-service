@@ -2,7 +2,7 @@ version: 2
 python_env: &python_env
   docker:
     - image: circleci/python:2.7-stretch-browsers
-    
+
 install_awscli: &install_awscli
   name: "Install awscli"
   command: |
@@ -14,7 +14,7 @@ install_deploysuite: &install_deploysuite
             cp ./../buildscript/master_deploy.sh .
             cp ./../buildscript/buildenv.sh .
             cp ./../buildscript/awsconfiguration.sh .
-            
+
 # Instructions of deployment
 deploy_steps: &deploy_steps
   - checkout
@@ -25,20 +25,20 @@ deploy_steps: &deploy_steps
   - setup_remote_docker
   - run: docker build -t tc-project-service:latest .
   - deploy:
-      name: "Running Masterscript -  deploy tc-project-service " 
+      name: "Running Masterscript -  deploy tc-project-service "
       command: |
-        ./awsconfiguration.sh $DEPLOY_ENV  
+        ./awsconfiguration.sh $DEPLOY_ENV
         source awsenvconf
         ./buildenv.sh -e $DEPLOY_ENV -b ${VAR_ENV}-tc-project-service-deployvar
         source buildenvvar
-        ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${VAR_ENV}-global-appvar,${VAR_ENV}-tc-project-service-appvar -i tc-project-service -p FARGATE 
+        ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${VAR_ENV}-global-appvar,${VAR_ENV}-tc-project-service-appvar -i tc-project-service -p FARGATE
 
         echo "======= Running Masterscript - deploy tc-project-service-consumers ==========="
         if [ -e ${VAR_ENV}-tc-project-service-appvar.json ]; then  sudo rm -vf ${VAR_ENV}-tc-project-service-appvar.json; fi
         ./buildenv.sh -e $DEPLOY_ENV -b ${VAR_ENV}-tc-project-service-consumers-deployvar
         source buildenvvar
         ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${VAR_ENV}-global-appvar,${VAR_ENV}-tc-project-service-appvar -i tc-project-service -p FARGATE
-        
+
 jobs:
   test:
     docker:
@@ -71,7 +71,7 @@ jobs:
           root: .
           paths:
             - dist
-            
+
   deployProd:
     <<: *python_env
     environment:
@@ -84,8 +84,8 @@ jobs:
     environment:
       DEPLOY_ENV: "DEV"
       VAR_ENV: "dev"
-    steps: *deploy_steps 
-    
+    steps: *deploy_steps
+
 workflows:
   version: 2
   build:
@@ -97,7 +97,7 @@ workflows:
             - test
           filters:
             branches:
-              only: ['dev', 'dev-sts', 'feature/looker-api-integration']
+              only: ['dev', 'dev-sts', 'feature/looker-api-integration', 'feature/hotfix-es-skills']
       - deployProd:
           context : org-global
           requires:
