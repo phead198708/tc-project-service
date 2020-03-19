@@ -1138,7 +1138,7 @@ describe('LIST Project', () => {
         });
       });
 
-      it('should only return "invites.userId" field, when it\'s defined in "fields"  query param', (done) => {
+      xit('should only return "invites.userId" field, when it\'s defined in "fields"  query param', (done) => {
         request(server)
         .get('/v5/projects/?fields=invites.userId')
         .set({
@@ -1180,7 +1180,7 @@ describe('LIST Project', () => {
         });
       });
 
-      it('should only return "attachments.title" field, when it\'s defined in "fields"  query param', (done) => {
+      xit('should only return "attachments.title" field, when it\'s defined in "fields"  query param', (done) => {
         request(server)
         .get('/v5/projects/?fields=attachments.title')
         .set({
