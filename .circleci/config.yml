@@ -115,7 +115,7 @@ workflows:
             - test
           filters:
             branches:
-              only: ['develop']
+              only: ['develop', 'feature/export-import']
       - deployProd:
           context : org-global
           requires:
